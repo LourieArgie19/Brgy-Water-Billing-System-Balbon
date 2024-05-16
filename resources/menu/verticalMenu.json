@@ -1,0 +1,40 @@
+{
+  "menu": [
+    {
+      "url": "/dashboard-analytics",
+      "name": "Dashboards",
+      "icon": "menu-icon tf-icons mdi mdi-home-outline",
+      "slug": "dashboard-analytics"
+    },
+    {
+      "menuHeader": "Users"
+    },
+    {
+      "url": "/users",
+      "name": "Users",
+      "icon": "menu-icon tf-icons mdi mdi-account-outline",
+      "slug": "users",
+      "roles": [
+        "admin"
+      ]
+    },
+    {
+      "menuHeader": "Clients"
+    },
+    {
+      "url": "/client",
+      "icon": "menu-icon tf-icons mdi mdi-table",
+      "name": "Clients",
+      "slug": "client",
+      "roles": [
+        "admin"
+      ]
+    },
+    {
+      "url": "/billing",
+      "name": "Billing",
+      "icon": "flex-shrink-0 mdi mdi-credit-card-outline me-1 mdi-20px",
+      "slug": "billing"
+    }
+  ]
+}
