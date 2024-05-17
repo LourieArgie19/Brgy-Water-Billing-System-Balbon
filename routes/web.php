@@ -83,6 +83,10 @@ Route::middleware('auth')->group(function () {
   //Billing
   Route::get('/billing', [BillingController::class, 'index'])->name('billing');
   Route::get('/fetch-billings', [BillingController::class, 'fetchBilling'])->name('fetch-billing');
+  Route::get('/billings/{id}/latest', [BillingController::class, 'fetchLatest']);
+  Route::post('/billing', [BillingController::class, 'store']);
+  Route::patch('/billing/{id}', [BillingController::class, 'markAsPaid']);
+
 
   // layout
   Route::get('/layouts/without-menu', [WithoutMenu::class, 'index'])->name('layouts-without-menu');

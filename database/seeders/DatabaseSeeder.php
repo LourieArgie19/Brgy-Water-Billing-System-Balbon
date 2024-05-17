@@ -18,6 +18,11 @@ class DatabaseSeeder extends Seeder
       'email' => 'argiebalbon9@gmail.com',
       'password' => bcrypt('argie12345'),
       'usertype' => 'admin',
+      'email_verified_at' => now(),
+    ]);
+
+    $this->call([
+      ClientSeeder::class,
     ]);
 
     // \App\Models\User::factory()->create([

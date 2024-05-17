@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Http\Controllers\WBS;
+
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+
 class UserController extends Controller
 {
   public function index()
@@ -33,7 +35,7 @@ class UserController extends Controller
 
   public function fetchUser()
   {
-    $users = User::all();
+    $users = User::whereNot('usertype', User::USER_TYPE_CLIENT)->get();
     return response()->json([
       'user' => $users,
     ]);

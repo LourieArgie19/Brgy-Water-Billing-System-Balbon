@@ -2,9 +2,11 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
   /**
    * Run the migrations.
    */
@@ -16,7 +18,8 @@ return new class extends Migration {
       $table->string('previous_reading');
       $table->string('current_reading');
       $table->string('price');
-      $table->rememberToken();
+      $table->date('date_issued')->useCurrent();
+      $table->boolean('is_paid')->default(false);
       $table->timestamps();
 
       $table

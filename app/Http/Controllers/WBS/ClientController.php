@@ -52,7 +52,7 @@ class ClientController extends Controller
 
   public function fetchClient()
   {
-    $clients = Clients::all();
+    $clients = Clients::with('user')->get();
     return response()->json([
       'client' => $clients,
     ]);
@@ -60,7 +60,7 @@ class ClientController extends Controller
 
   public function getClient($id)
   {
-    $user = Clients::find($id);
+    $user = Clients::with('user')->find($id);
 
     if ($user) {
       return response()->json([
@@ -77,7 +77,7 @@ class ClientController extends Controller
 
   public function updateClient(Request $request, $id)
   {
-    $data = $request->validate([
+    $request->validate([
       'fullname' => 'required',
       'email' => 'required|email',
       'purok' => 'required',
@@ -85,10 +85,17 @@ class ClientController extends Controller
     ]);
 
     // Find the user by ID
-    $user = Clients::findOrFail($id);
-
+    $client = Clients::findOrFail($id);
     // Update the user's information
-    $user->update($data);
+    $client->update([
+      'purok' => $request->purok,
+      'meter_number' => $request->metersnumber
+    ]);
+
+    $client->user->update([
+      'name' => $request->fullname,
+      'email' => $request->email
+    ]);
 
     // Return success response
     return response()->json(['success' => true, 'message' => 'User updated successfully']);
