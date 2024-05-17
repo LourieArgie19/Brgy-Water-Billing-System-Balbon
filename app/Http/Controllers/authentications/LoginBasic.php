@@ -4,11 +4,13 @@ namespace App\Http\Controllers\authentications;
 
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Models\Clients;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\RateLimiter;
 use Exception;
+use Illuminate\Support\Facades\Hash;
 
 class LoginBasic extends Controller
 {
@@ -93,5 +95,18 @@ class LoginBasic extends Controller
     } else {
       return response()->json(['status_code' => 1]);
     }
+  }
+
+  private function validateClientAccount(Request $request)
+  {
+    $clients = Clients::where('email', $request->email)->get();
+
+    foreach ($clients as $client) {
+      if (Hash::check($request->password, $client->password)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }

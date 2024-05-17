@@ -1,74 +1,76 @@
-@extends('layouts/commonMaster' )
+@extends('layouts/commonMaster')
 
 @php
-/* Display elements */
-$contentNavbar = true;
-$containerNav = ($containerNav ?? 'container-xxl');
-$isNavbar = ($isNavbar ?? true);
-$isMenu = ($isMenu ?? true);
-$isFlex = ($isFlex ?? false);
-$isFooter = ($isFooter ?? true);
+    /* Display elements */
+    $contentNavbar = true;
+    $containerNav = $containerNav ?? 'container-xxl';
+    $isNavbar = $isNavbar ?? true;
+    $isMenu = $isMenu ?? true;
+    $isFlex = $isFlex ?? false;
+    $isFooter = $isFooter ?? true;
 
-/* HTML Classes */
-$navbarDetached = 'navbar-detached';
+    /* HTML Classes */
+    $navbarDetached = 'navbar-detached';
 
-/* Content classes */
-$container = ($container ?? 'container-xxl');
+    /* Content classes */
+    $container = $container ?? 'container-xxl';
 
 @endphp
 
 @section('layoutContent')
-<div class="layout-wrapper layout-content-navbar {{ $isMenu ? '' : 'layout-without-menu' }}">
-    <div class="layout-container">
+    <div class="layout-wrapper layout-content-navbar {{ $isMenu ? '' : 'layout-without-menu' }}">
+        <div class="layout-container">
 
-        @if ($isMenu)
-        @include('layouts/sections/menu/verticalMenu')
-        @endif
-
-
-        <!-- Layout page -->
-        <div class="layout-page">
-            <!-- BEGIN: Navbar-->
-            @if ($isNavbar)
-            @include('layouts/sections/navbar/navbar')
+            @if ($isMenu)
+                @include('layouts/sections/menu/verticalMenu')
             @endif
-            <!-- END: Navbar-->
 
 
-            <!-- Content wrapper -->
-            <div class="content-wrapper">
+            <!-- Layout page -->
+            <div class="layout-page">
+                <!-- BEGIN: Navbar-->
+                @if ($isNavbar)
+                    @include('layouts/sections/navbar/navbar')
+                @endif
+                <!-- END: Navbar-->
 
-                <!-- Content -->
-                @if ($isFlex)
-                <div class="{{$container}} d-flex align-items-stretch flex-grow-1 p-0">
-                    @else
-                    <div class="{{$container}} flex-grow-1 container-p-y">
-                        @endif
 
-                        @yield('content')
+                <!-- Content wrapper -->
+                <div class="content-wrapper">
 
-                    </div>
-                    <!-- / Content -->
-
-                    <!-- Footer -->
-                    @if ($isFooter)
-                    @include('layouts/sections/footer/footer')
+                    <!-- Content -->
+                    @if ($isFlex)
+                        <div class="{{ $container }} d-flex align-items-stretch flex-grow-1 p-0">
+                        @else
+                            <div class="{{ $container }} flex-grow-1 container-p-y">
                     @endif
-                    <!-- / Footer -->
-                    <div class="content-backdrop fade"></div>
-                </div>
-                <!--/ Content wrapper -->
-            </div>
-            <!-- / Layout page -->
-        </div>
 
-        @if ($isMenu)
+                    @yield('content')
+
+                </div>
+                <!-- / Content -->
+
+                <!-- Footer -->
+                @if ($isFooter)
+                    @include('layouts/sections/footer/footer')
+                @endif
+                <!-- / Footer -->
+                <div class="content-backdrop fade"></div>
+            </div>
+            <!--/ Content wrapper -->
+        </div>
+        <!-- / Layout page -->
+    </div>
+
+    @if ($isMenu)
         <!-- Overlay -->
         <div class="layout-overlay layout-menu-toggle"></div>
-        @endif
-        <!-- Drag Target Area To SlideIn Menu On Small Screens -->
-        <div class="drag-target"></div>
+    @endif
+    <!-- Drag Target Area To SlideIn Menu On Small Screens -->
+    <div class="drag-target"></div>
     </div>
     <!-- / Layout wrapper -->
-    @endsection
-    <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
+@endsection
+<script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
