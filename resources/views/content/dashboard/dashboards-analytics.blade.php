@@ -56,6 +56,7 @@
             <thead>
                 <tr>
                     <th scope="col">Client Name</th>
+                    <th scope="col">Previous Reading</th>
                     <th scope="col">Current Reading</th>
                     <th scope="col">Price</th>
                     <th scope="col">Status</th>
@@ -65,7 +66,8 @@
                 @forelse ($bills as $bill)
                     <tr>
                         <th scope="row">{{ $bill->billOwner->user->name }}</th>
-                        <td>{{ $bill->getCalculatedPrice() ?? 0 }}</td>
+                        <td>{{ $bill->previous_reading ?? 0 }}</td>
+                        <td>{{ $bill->current_reading ?? 0 }}</td>
                         <td>{{ $bill->price ?? 0 }}</td>
                         <td>{{ $bill->getPrettyStatus() }}</td>
                     </tr>
