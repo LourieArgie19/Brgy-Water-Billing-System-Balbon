@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Mail\MarkAsDoneMail;
 use App\Models\Billing;
+use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
@@ -27,11 +28,11 @@ class BillingController extends Controller
   public function store(Request $request)
   {
     $prevBill = Billing::whereHas('billOwner', fn ($query) => $query->where('id', $request->client_id))->latest()->first();
-    $price = ($request->current_reading - $prevBill->current_reading) * env('WATER_RATE');
+    $price = ($request->current_reading - $prevBill?->current_reading ?? 0) * env('WATER_RATE');
     Billing::create([
       'transaction_id' => Str::uuid(),
       'client_id' => $request->client_id,
-      'previous_reading' => $prevBill->current_reading,
+      'previous_reading' => $prevBill?->current_reading ?? 0,
       'current_reading' => $request->current_reading,
       'price' => $price,
       'date_issued' => $request->date_issued,
@@ -43,9 +44,13 @@ class BillingController extends Controller
 
   public function fetchBilling()
   {
-    $billings = Billing::with('billOwner.user')->orderByDesc('date_issued')->get(); // Adjusted the attributes to match the model
 
-    return response()->json(['billings' => $billings]); // Corrected key to match AJAX response
+    $billings = Billing::with('billOwner.user')->orderByDesc('date_issued'); // Adjusted the attributes to match the model
+    if (auth()->user()->usertype == User::USER_TYPE_CLIENT) {
+      $billings = $billings->whereHas('billOwner', fn ($query) => $query->where('user_id', auth()->user()->id));
+    }
+
+    return response()->json(['billings' => $billings->get()]); // Corrected key to match AJAX response
   }
 
   public function fetchLatest(Request $request)

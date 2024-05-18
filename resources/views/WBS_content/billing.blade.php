@@ -147,14 +147,16 @@
             <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer">
                 <div class="card-header flex-column flex-md-row">
                     <div class="d-flex justify-content-between mb-2">
-                        <button class="dt-button create-new btn btn-primary" tabindex="0"
-                            aria-controls="DataTables_Table_0" type="button" data-bs-toggle="modal"
-                            data-bs-target="#createBillModal">
-                            <span>
-                                <i class="mdi mdi-plus me-sm-1"></i>
-                                <span class="d-none d-sm-inline-block">Billing</span>
-                            </span>
-                        </button>
+                        @if (auth()->user()->usertype != 'client')
+                            <button class="dt-button create-new btn btn-primary" tabindex="0"
+                                aria-controls="DataTables_Table_0" type="button" data-bs-toggle="modal"
+                                data-bs-target="#createBillModal">
+                                <span>
+                                    <i class="mdi mdi-plus me-sm-1"></i>
+                                    <span class="d-none d-sm-inline-block">Billing</span>
+                                </span>
+                            </button>
+                        @endif
                         <div class="nav-item d-flex align-items-center">
                             <i class="mdi mdi-magnify mdi-24px lh-0"></i>
                             <input type="text" id="searchInput" class="form-control border-2 shadow-none mr-2"
@@ -188,6 +190,7 @@
     </div>
     <script>
         var water_rate = '{{ env('WATER_RATE') }}';
+        var user_role = '{{ auth()->user()->usertype }}'
     </script>
     <script src="{{ asset('assets/js/billing.js') }}"></script>
     <!--/ Hoverable Table rows -->
