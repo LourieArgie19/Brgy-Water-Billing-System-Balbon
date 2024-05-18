@@ -15,10 +15,12 @@ return new class extends Migration
     Schema::create('billing', function (Blueprint $table) {
       $table->id();
       $table->unsignedBigInteger('client_id');
+      $table->string('transaction_id');
       $table->string('previous_reading');
       $table->string('current_reading');
       $table->string('price');
       $table->date('date_issued')->useCurrent();
+      $table->date('date_of_payment')->nullable();
       $table->boolean('is_paid')->default(false);
       $table->timestamps();
 

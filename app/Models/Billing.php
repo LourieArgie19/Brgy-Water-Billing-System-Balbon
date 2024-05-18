@@ -10,7 +10,10 @@ class Billing extends Model
 {
   use HasFactory;
   protected $table = 'billing';
-  protected $fillable = ['client_id', 'previous_reading', 'current_reading', 'price', 'date_issued', 'is_paid'];
+  protected $fillable = [
+    'transaction_id', 'date_of_payment',
+    'client_id', 'previous_reading', 'current_reading', 'price', 'date_issued', 'is_paid'
+  ];
 
   public function getPrettyStatus()
   {

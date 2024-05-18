@@ -5,7 +5,10 @@ namespace App\Http\Controllers\WBS;
 use App\Models\Clients; // Adjusted the import to match the model
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Mail\MarkAsDoneMail;
 use App\Models\Billing;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class BillingController extends Controller
 {
@@ -26,6 +29,7 @@ class BillingController extends Controller
     $prevBill = Billing::whereHas('billOwner', fn ($query) => $query->where('id', $request->client_id))->latest()->first();
     $price = ($request->current_reading - $prevBill->current_reading) * env('WATER_RATE');
     Billing::create([
+      'transaction_id' => Str::uuid(),
       'client_id' => $request->client_id,
       'previous_reading' => $prevBill->current_reading,
       'current_reading' => $request->current_reading,
@@ -53,8 +57,15 @@ class BillingController extends Controller
 
   public function markAsPaid($id)
   {
-    $bill = Billing::findOrFail($id);
-    $bill->update(['is_paid' => true]);
-    return back();
+    $bill = Billing::with('billOwner.user')->findOrFail($id);
+    $bill->update(['is_paid' => true, 'date_of_payment' => now()]);
+
+    Mail::to($bill->billOwner->user->email)->send(new MarkAsDoneMail(
+      $bill->billOwner->user->name,
+      $bill->price,
+      $bill->date_of_payment,
+      $bill->transaction_id
+    ));
+    return response()->json(['success' => true, 'message' => 'Bill was marked as paid']);
   }
 }
