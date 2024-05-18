@@ -78,7 +78,9 @@ $(document).ready(function () {
   }
 
   function addTableEntry(record) {
-    const actions = record.is_paid ? `` : `
+    let actions = ''
+    if(user_role != 'client') {
+      actions = record.is_paid ? `` : `
       <div class="action-buttons">
         <button type="button" class="btn btn-sm btn-info mark-as-done-billing" data-id="${record.id}">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
@@ -88,6 +90,9 @@ $(document).ready(function () {
         </button>
       </div>
     `
+    }
+
+
     $('tbody').append(
       `
         <tr data-id="${record.id}">

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Mail\MarkAsDoneMail;
 use App\Models\Billing;
+use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
@@ -43,9 +44,13 @@ class BillingController extends Controller
 
   public function fetchBilling()
   {
-    $billings = Billing::with('billOwner.user')->orderByDesc('date_issued')->get(); // Adjusted the attributes to match the model
 
-    return response()->json(['billings' => $billings]); // Corrected key to match AJAX response
+    $billings = Billing::with('billOwner.user')->orderByDesc('date_issued'); // Adjusted the attributes to match the model
+    if (auth()->user()->usertype == User::USER_TYPE_CLIENT) {
+      $billings = $billings->whereHas('billOwner', fn ($query) => $query->where('user_id', auth()->user()->id));
+    }
+
+    return response()->json(['billings' => $billings->get()]); // Corrected key to match AJAX response
   }
 
   public function fetchLatest(Request $request)
