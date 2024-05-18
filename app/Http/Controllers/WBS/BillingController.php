@@ -27,11 +27,11 @@ class BillingController extends Controller
   public function store(Request $request)
   {
     $prevBill = Billing::whereHas('billOwner', fn ($query) => $query->where('id', $request->client_id))->latest()->first();
-    $price = ($request->current_reading - $prevBill->current_reading) * env('WATER_RATE');
+    $price = ($request->current_reading - $prevBill?->current_reading ?? 0) * env('WATER_RATE');
     Billing::create([
       'transaction_id' => Str::uuid(),
       'client_id' => $request->client_id,
-      'previous_reading' => $prevBill->current_reading,
+      'previous_reading' => $prevBill?->current_reading ?? 0,
       'current_reading' => $request->current_reading,
       'price' => $price,
       'date_issued' => $request->date_issued,
