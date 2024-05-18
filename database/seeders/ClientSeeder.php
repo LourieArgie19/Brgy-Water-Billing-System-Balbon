@@ -7,6 +7,7 @@ use App\Models\Clients;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Support\Str;
 
 class ClientSeeder extends Seeder
 {
@@ -31,6 +32,7 @@ class ClientSeeder extends Seeder
     ]);
 
     Billing::create([
+      'transaction_id' => Str::uuid(),
       'client_id' => $client->id,
       'previous_reading' => 0,
       'current_reading' => 100,

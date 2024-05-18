@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SampleMail;
+use App\Models\User;
 
 class ClientController extends Controller
 {
@@ -29,23 +30,33 @@ class ClientController extends Controller
   public function saveData(Request $request)
   {
     // Validate the incoming request data
-    $data = $request->validate([
+    $request->validate([
       'fullname' => 'required',
-      'email' => 'required|email|unique:client,email',
+      'email' => 'required|email|unique:users,email',
       'date' => 'required|date',
       'purok' => 'required',
       'metersnumber' => 'required',
-      'password' => 'required|min:5|max:8',
+      'password' => 'required|min:8',
     ]);
 
-    // Hash the password
-    $data['password'] = bcrypt($data['password']);
-
     // Create a new client
-    $client = Clients::create($data);
+    $user = User::create([
+      'name' => $request->fullname,
+      'email' => $request->email,
+      'email_verified_at' => now(),
+      'password' => bcrypt($request->password),
+      'usertype' => User::USER_TYPE_CLIENT
+    ]);
+
+    Clients::create([
+      'user_id' => $user->id,
+      'date' => $request->date,
+      'purok' => $request->purok,
+      'meter_number' => $request->metersnumber,
+    ]);
 
     // Send email
-    Mail::to($client->email)->send(new SampleMail($client->fullname));
+    Mail::to($user->email)->send(new SampleMail($user->name));
 
     return response()->json(['success' => true, 'message' => 'Client created successfully.']);
   }

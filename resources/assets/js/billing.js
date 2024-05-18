@@ -42,6 +42,25 @@ $(document).ready(function () {
     })
   }
 
+  function markAsPaid(id) {
+    $.ajax({
+        url: `/billing/${id}/mark-as-paid`,
+        method: 'PATCH',
+        contentType: 'application/json',
+        success: function(data) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: data.message,
+          })
+          fetchBillings()
+        },
+        error: function(error) {
+            console.error('Error:', error);
+        }
+    });
+  }
+
   function fetchLatestClientBill() {
     const client_id = $('.client-dropdown').val()
     $.ajax({
@@ -61,12 +80,7 @@ $(document).ready(function () {
   function addTableEntry(record) {
     const actions = record.is_paid ? `` : `
       <div class="action-buttons">
-       <!--- Dili ika recommend kay ma osab ang bayronun labaw na kung previous nya nabayaran na
-        <button type="button" class="btn btn-sm btn-primary edit-billing" data-id="${record.id}">
-        <i class="mdi mdi-pencil-outline me-1"></i> Edit
-        </button>
-        ---->
-        <button type="button" class="btn btn-sm btn-info mark-as-done-billing"" data-id="${record.id}">
+        <button type="button" class="btn btn-sm btn-info mark-as-done-billing" data-id="${record.id}">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
           <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
         </svg>
@@ -166,5 +180,14 @@ $(document).ready(function () {
       }
     });
   })
+
+  $('body').on('click', '.mark-as-done-billing', function() {
+        var button = $(this);
+        var recordId = button.data('id');
+        if (!button.prop('disabled')) {
+            markAsPaid(recordId, button);
+            button.prop('disabled', true); // Disable the button after it is clicked
+        }
+    });
   // Other code for form submission, updating data, etc. remains the same as before
 });
